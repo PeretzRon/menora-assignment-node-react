@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 
 const configuration = require('./config');
 const imdbApi = require('./routers/imdbApi');
-const mainRouter = require('./routers/imdbApi');
+const mainRoutes = require('./routers/imdbApi');
+const errorRoutes = require('./routers/errors');
 
 const app = express();
 app.use(express.static(path.resolve(__dirname, '../client/build')));
@@ -15,7 +16,8 @@ app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(imdbApi.router);
-app.use(mainRouter.router);
+app.use(mainRoutes.router);
+app.use(errorRoutes.router);
 
 const server = http.createServer(app);
 
