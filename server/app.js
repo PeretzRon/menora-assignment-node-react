@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
-require('dotenv').config();
+require('dotenv').config({path: path.join(__dirname, '.env')});
 
 const imdbApi = require('./routers/imdbApi');
 const mainRoutes = require('./routers/imdbApi');
