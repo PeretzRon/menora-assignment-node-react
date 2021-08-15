@@ -5,7 +5,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 
-const configuration = require('./config');
+const {configuration} = require('./utils/config');
 const imdbApi = require('./routers/imdbApi');
 const mainRoutes = require('./routers/imdbApi');
 const errorRoutes = require('./routers/errors');

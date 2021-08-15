@@ -1,17 +1,10 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const NodeCache = require("node-cache");
-const configuration = require('../config');
-
+const {configuration, popularMoviesID} = require('../utils/config');
 
 const router = express.Router();
 const cache = new NodeCache({stdTTL: 600, useClones: false});
-
-// const popularMoviesID = [{imdbID: 'tt0120591',}, {imdbID: 'tt1201607',}, {imdbID: 'tt0099253',},
-//     {imdbID: 'tt0111161',}, {imdbID: 'tt0167261',}, {imdbID: 'tt0120338',}, {imdbID: 'tt0118158'},
-//     {imdbID: 'tt0108778',}, {imdbID: 'tt0117571',}, {imdbID: 'tt0114709',}];
-
-const popularMoviesID = [{imdbID: 'tt0120591'}];
 
 async function getPopularMovies() {
     const popularMoviesCache = cache.get("PopularMoviesCache$");
@@ -41,7 +34,7 @@ router.get('/popularMovies', async (req, res) => {
 router.get('/searchMovie', (req, res) => {
     const movieName = req.query.search;
     const valueFromCache = cache.get(movieName.toLowerCase());
-    if (valueFromCache) {
+    if (valueFromCache) { // try to get same search from cache
         res.status(200).send(valueFromCache);
     } else {
         fetch(`https://www.omdbapi.com/?s=${movieName}&apikey=${configuration.apiKey}`)
@@ -58,7 +51,7 @@ router.get('/searchMovie', (req, res) => {
                 cache.set(movieName.toLowerCase(), results);
                 res.status(200).send(results);
             }).catch(error => {
-            res.status(501).send();
+            res.status(501).send('error');
         });
     }
 });
