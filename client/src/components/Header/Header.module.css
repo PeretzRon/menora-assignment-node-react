@@ -1,8 +1,19 @@
 
-.Header {
-    background-image: linear-gradient(to right bottom, hsl(195.8,98.9%,35.3%), hsl(148.6,30.4%,86.5%));
-    padding: 10px;
-    font-size: 1.8rem;
-    font-weight: bold;
+.root {
+    background-image: linear-gradient(to right bottom, #328cff, #a5b3ff);
+}
+
+.toolbar {
+    display: flex;
+    justify-content: center;
+}
+
+.icon {
+    margin-left: 10px;
+}
+
+.title {
+    font-size: 2rem;
     font-family: "Varela Round", serif;
+    font-weight: bold;
 }

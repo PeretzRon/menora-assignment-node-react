@@ -10,3 +10,5 @@ export const serverMessages =  {
     serverError: 'Server Error',
     moviesNotFounds: 'Oops - no results was found'
 }
+
+export const title = 'Menora - IMDB'
