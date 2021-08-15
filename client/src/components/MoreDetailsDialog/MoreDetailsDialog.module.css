@@ -1,0 +1,14 @@
+
+.dialogTitle {
+    background-color: hsla(211, 100%, 84%, 0.58);
+}
+
+.dialogTitle h2 {
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.dialogAction {
+    background-color: hsla(210, 100%, 89%, 0.58);
+}
+

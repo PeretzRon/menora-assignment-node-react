@@ -2,7 +2,7 @@ import React from "react";
 import classes from './Movies.module.css';
 import MovieCard from "../../components/MovieCard/MovieCard";
 import {Grid} from "@material-ui/core";
-import MoreDetailsDialog from "../../components/MovieMoreDetails/MoreDetailsDialog";
+import MoreDetailsDialog from "../../components/MoreDetailsDialog/MoreDetailsDialog";
 
 const Movies = props => {
     const [moreDetailsDialog, setMoreDetailsDialog] = React.useState({
