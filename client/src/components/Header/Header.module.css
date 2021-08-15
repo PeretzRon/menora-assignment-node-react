@@ -1,0 +1,8 @@
+
+.Header {
+    background-image: linear-gradient(to right bottom, hsl(195.8,98.9%,35.3%), hsl(148.6,30.4%,86.5%));
+    padding: 10px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: "Varela Round", serif;
+}
