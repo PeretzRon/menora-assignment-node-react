@@ -12,22 +12,30 @@ const cache = new NodeCache({stdTTL: 600, useClones: false});
 //     {imdbID: 'tt0108778',}, {imdbID: 'tt0117571',}, {imdbID: 'tt0114709',}];
 
 const popularMoviesID = [{imdbID: 'tt0120591'}];
-let popularMoviesData = '';
 
-async function getMoviesByID(isInitialMovies, searchMoviesList) {
-    const movies = isInitialMovies ? popularMoviesID : searchMoviesList;
+async function getPopularMovies() {
+    const popularMoviesCache = cache.get("PopularMoviesCache$");
+    if (popularMoviesCache) {
+        return popularMoviesCache;
+    } else {
+        const popularMovies = await getMoviesByID(popularMoviesID);
+        if (popularMovies) {
+            cache.set("PopularMoviesCache$", popularMovies);
+        }
+        return popularMovies;
+    }
+}
+
+async function getMoviesByID(movies) {
     const allPromises = movies.map(movie => fetch(`https://www.omdbapi.com/?i=${movie.imdbID}&apikey=${configuration.apiKey}`));
     const all = await Promise.all(allPromises);
     const allMoviesAsJson = all.map(value => value.json());
-    const finalResults = await Promise.all(allMoviesAsJson);
-    if (isInitialMovies) {
-        popularMoviesData = finalResults;
-    }
-    return finalResults;
+    return await Promise.all(allMoviesAsJson);
 }
 
-router.get('/popularMovies', (req, res) => {
-    res.status(200).send(popularMoviesData);
+router.get('/popularMovies', async (req, res) => {
+    const movies = await getPopularMovies();
+    res.status(200).send(movies);
 });
 
 router.get('/searchMovie', (req, res) => {
@@ -43,7 +51,7 @@ router.get('/searchMovie', (req, res) => {
                     res.status(200).send(JSON.stringify([]));
                     return JSON.stringify([]);
                 } else {
-                    return getMoviesByID(false, results.Search);
+                    return getMoviesByID(results.Search);
                 }
             })
             .then(results => {
@@ -57,5 +65,5 @@ router.get('/searchMovie', (req, res) => {
 
 module.exports = {
     router,
-    initialPopularMovies: getMoviesByID
+    initialPopularMovies: getPopularMovies
 };
