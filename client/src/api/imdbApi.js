@@ -1,7 +1,9 @@
+const {REACT_APP_SERVER_HOST, REACT_APP_SERVER_PORT} = process.env;
+
 const imdbApi = {
     getPopularMovies: async function () {
         try {
-            const url = 'http://10.0.0.25:3001/popularMovies';
+            const url = `http://${REACT_APP_SERVER_HOST}:${REACT_APP_SERVER_PORT}/popularMovies`;
             const options = prepareRequest(url, 'GET');
             const data = await fetch(url, options);
             return await data.json();
@@ -10,7 +12,7 @@ const imdbApi = {
         }
     },
     getMoviesByText: async function (movieName) {
-        const url = `http://10.0.0.25:3001/searchMovie?search=${movieName}`;
+        const url = `http://${REACT_APP_SERVER_HOST}:${REACT_APP_SERVER_PORT}/searchMovie?search=${movieName}`;
         const options = prepareRequest(url, 'GET');
         const data = await fetch(url, options);
         return await data.json();

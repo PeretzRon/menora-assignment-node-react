@@ -1,7 +1,7 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const NodeCache = require("node-cache");
-const {configuration, popularMoviesID} = require('../utils/config');
+const {popularMoviesID} = require('../utils/config');
 
 const router = express.Router();
 const cache = new NodeCache({stdTTL: 600, useClones: false});
@@ -20,7 +20,7 @@ async function getPopularMovies() {
 }
 
 async function getMoviesByID(movies) {
-    const allPromises = movies.map(movie => fetch(`https://www.omdbapi.com/?i=${movie.imdbID}&apikey=${configuration.apiKey}`));
+    const allPromises = movies.map(movie => fetch(`https://www.omdbapi.com/?i=${movie.imdbID}&apikey=${process.env.IMDB_API_KEY}`));
     const all = await Promise.all(allPromises);
     const allMoviesAsJson = all.map(value => value.json());
     return await Promise.all(allMoviesAsJson);
@@ -37,7 +37,7 @@ router.get('/searchMovie', (req, res) => {
     if (valueFromCache) { // try to get same search from cache
         res.status(200).send(valueFromCache);
     } else {
-        fetch(`https://www.omdbapi.com/?s=${movieName}&apikey=${configuration.apiKey}`)
+        fetch(`https://www.omdbapi.com/?s=${movieName}&apikey=${process.env.IMDB_API_KEY}`)
             .then(value => value.json())
             .then(results => {
                 if (results.Error === 'Movie not found!') {

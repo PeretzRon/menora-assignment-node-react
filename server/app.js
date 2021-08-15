@@ -3,9 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
-
-const {configuration} = require('./utils/config');
 const imdbApi = require('./routers/imdbApi');
 const mainRoutes = require('./routers/imdbApi');
 const errorRoutes = require('./routers/errors');
@@ -24,7 +23,7 @@ const server = http.createServer(app);
 // get the 10 popular movie and then start the server
 imdbApi.initialPopularMovies(true)
     .then(() => {
-        server.listen(configuration.serverPort, () => {
-            console.log(`Server start on port ${configuration.serverPort}`);
+        server.listen(process.env.SERVER_PORT, () => {
+            console.log(`Server start on port ${process.env.SERVER_PORT}`);
         });
     }).catch(reason => console.log(reason));
