@@ -1,0 +1,33 @@
+
+.searchBar {
+    display: flex;
+    justify-content: center;
+    margin: 2px 7px;
+}
+
+.paper {
+    padding: 1px 14px;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    width: 400px;
+    margin: 7px;
+    border: 1px solid #ccc;
+}
+
+.progress {
+    position: absolute;
+    padding: 5px;
+    top: 7px;
+    right: 60px;
+}
+
+.buttonBack {
+    margin: 7px;
+    border: 1px solid #ccc;
+    color: black;
+}
+
+.input {
+    flex: 1;
+}
