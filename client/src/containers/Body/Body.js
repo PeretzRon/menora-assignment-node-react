@@ -39,6 +39,7 @@ const Body = () => {
                         showBackButton: true,
                         showLoading: false
                     });
+                    setMovies([]);
                 } else {
                     setShowAdditionalComponent({ // [..., ...]
                         ...showAdditionalComponent, message: "", showBackButton: true, showLoading: false

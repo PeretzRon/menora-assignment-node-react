@@ -35,17 +35,20 @@ router.get('/searchMovie', (req, res) => {
     const movieName = req.query.search;
     const valueFromCache = cache.get(movieName.toLowerCase());
     if (valueFromCache) { // try to get same search from cache
-        res.status(200).send(valueFromCache);
+        res.status(200).json(valueFromCache);
     } else {
         fetch(`https://www.omdbapi.com/?s=${movieName}&apikey=${process.env.IMDB_API_KEY}`)
             .then(value => value.json())
             .then(results => {
-                cache.set(movieName.toLowerCase(), results);
                 if (results.Error) {
+                    cache.set(movieName.toLowerCase(), results.Error);
                     res.status(200).json(results.Error);
                 } else {
                     getMoviesByID(results.Search)
-                        .then(results => res.status(200).send(results));
+                        .then(results => {
+                            cache.set(movieName.toLowerCase(), results);
+                            res.status(200).send(results)
+                        });
                 }
             }).catch(error => {
             res.status(501).send('error');

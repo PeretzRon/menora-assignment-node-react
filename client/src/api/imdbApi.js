@@ -18,6 +18,7 @@ const imdbApi = {
             const data = await fetch(url, options);
             return  await data.json();
         } catch (error) {
+            console.log(error);
             return [];
         }
     }
