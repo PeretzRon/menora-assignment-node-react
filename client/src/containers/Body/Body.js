@@ -4,7 +4,6 @@ import Movies from "../Movies/Movies";
 import imdbApi from "../../api/imdbApi";
 import {serverMessages} from '../../utils/texts';
 
-let popularMovies = []; // keep the poplar movies list for user go back from search results
 const Body = () => {
 
     const [movies, setMovies] = useState([]);
@@ -14,16 +13,29 @@ const Body = () => {
         message: "",
     });
 
+    const getPopularMovies = async () => {
+        return imdbApi.getPopularMovies().then(results => {
+            if (results) {
+                setMovies(results);
+            } else {
+                setShowAdditionalComponent({...showAdditionalComponent, message: serverMessages.serverError});
+            }
+        }).catch(reason => setShowAdditionalComponent({
+            ...showAdditionalComponent,
+            message: serverMessages.serverError
+        }));
+    }
+
     const handleSearch = (event, input) => {
         event.preventDefault();
         if (input === '') return; // no input, do nothing
         setShowAdditionalComponent({...showAdditionalComponent, showLoading: true, message: ""});
         imdbApi.getMoviesByText(input)
             .then(searchResultsMovies => {
-                if (searchResultsMovies.length === 0) { // no movies was found []
+                if (!Array.isArray(searchResultsMovies)) { // some error from the api
                     setShowAdditionalComponent({
                         ...showAdditionalComponent,
-                        message: serverMessages.moviesNotFounds,
+                        message: searchResultsMovies,
                         showBackButton: true,
                         showLoading: false
                     });
@@ -31,33 +43,19 @@ const Body = () => {
                     setShowAdditionalComponent({ // [..., ...]
                         ...showAdditionalComponent, message: "", showBackButton: true, showLoading: false
                     });
+                    setMovies(searchResultsMovies);
                 }
-                setMovies(searchResultsMovies);
             }).catch(reason => {
             setShowAdditionalComponent({...showAdditionalComponent, showBackButton: true, showLoading: false});
         });
     };
 
-    const handleBack = () => {
-        setMovies([...popularMovies]);
+    const handleBack = async () => {
+        await getPopularMovies()
         setShowAdditionalComponent({...showAdditionalComponent, showBackButton: false, message: ""});
     };
 
     useEffect(() => {
-        function getPopularMovies() {
-            imdbApi.getPopularMovies().then(results => {
-                if (results) {
-                    setMovies(results);
-                    popularMovies = results;
-                } else {
-                    setShowAdditionalComponent({...showAdditionalComponent, message: serverMessages.serverError});
-                }
-            }).catch(reason => setShowAdditionalComponent({
-                ...showAdditionalComponent,
-                message: serverMessages.serverError
-            }));
-        }
-
         getPopularMovies();
     }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -40,16 +40,13 @@ router.get('/searchMovie', (req, res) => {
         fetch(`https://www.omdbapi.com/?s=${movieName}&apikey=${process.env.IMDB_API_KEY}`)
             .then(value => value.json())
             .then(results => {
-                if (results.Error === 'Movie not found!') {
-                    res.status(200).send(JSON.stringify([]));
-                    return JSON.stringify([]);
-                } else {
-                    return getMoviesByID(results.Search);
-                }
-            })
-            .then(results => {
                 cache.set(movieName.toLowerCase(), results);
-                res.status(200).send(results);
+                if (results.Error) {
+                    res.status(200).json(results.Error);
+                } else {
+                    getMoviesByID(results.Search)
+                        .then(results => res.status(200).send(results));
+                }
             }).catch(error => {
             res.status(501).send('error');
         });

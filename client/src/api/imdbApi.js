@@ -12,10 +12,14 @@ const imdbApi = {
         }
     },
     getMoviesByText: async function (movieName) {
-        const url = `http://${REACT_APP_SERVER_HOST}:${REACT_APP_SERVER_PORT}/searchMovie?search=${movieName}`;
-        const options = prepareRequest(url, 'GET');
-        const data = await fetch(url, options);
-        return await data.json();
+        try {
+            const url = `http://${REACT_APP_SERVER_HOST}:${REACT_APP_SERVER_PORT}/searchMovie?search=${movieName}`;
+            const options = prepareRequest(url, 'GET');
+            const data = await fetch(url, options);
+            return  await data.json();
+        } catch (error) {
+            return [];
+        }
     }
 };
 
